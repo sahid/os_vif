@@ -30,7 +30,7 @@ class TestOSVIF(base.TestCase):
         os_vif.initialize()
         os_vif.initialize()
         mock_EM.assert_called_once_with(
-            invoke_args={}, invoke_on_load=True, namespace='os_vif')
+            invoke_args=mock.ANY, invoke_on_load=True, namespace='os_vif')
         self.assertNotEqual(None, os_vif._EXT_MANAGER)
 
     def test_plug_not_initialized(self):

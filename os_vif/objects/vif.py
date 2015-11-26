@@ -145,3 +145,48 @@ class VIF(base.VersionedObject):
     def floating_ips(self):
         return [floating_ip for fixed_ip in self.fixed_ips
                 for floating_ip in fixed_ip['floating_ips']]
+
+
+class Config(base.VersionedObject):
+    """Configuration passed to initialize plugin"""
+    # Version 1.0: Initial version
+    VERSION = '1.0'
+
+    fields = {
+        # Default: False. For plugins that configure IPv6 iptables
+        # rules or functionality, set this option to True if you want
+        # to support IPv6.
+        'use_ipv6': fields.BooleanField(default=False),
+
+        # Default: False. Set to True to force plugins to use sudoers
+        # files instead of any 'oslo.rootwrap' functionality.
+        'disable_rootwrap': fields.BooleanField(default=False),
+
+        # Default: False. Set to True to use the optional
+        # 'oslo.rootwrap' daemon for better performance of root-run
+        # commands.
+        'use_rootwrap_daemon': fields.BooleanField(default=False),
+
+        # Default: /etc/nova/rootwrap.conf. Path to the
+        # rootwrap configuration file.
+        'rootwrap_config': fields.BooleanField(default=False),
+
+        # Default: ''. Override top filters in iptables rules
+        # construction.
+        'iptables_top_regex': fields.StringField(default=''),
+
+        # Default: ''. Override bottom filters in iptables rules
+        # construction.
+        'iptables_bottom_regex': fields.StringField(default=''),
+
+        # Default: DROP. Override the name of the drop action in
+        # iptables rules.
+        'iptables_drop_action': fields.StringField(default='DROP'),
+
+        # Default: ['all'].
+        'forward_bridge_interface': fields.DictOfStringsField(default=['all']),
+
+        # Default: 1500. Override the MTU of network devices created
+        # by a VIF plugin.
+        'network_device_mtu': fields.StringField(default=1500),
+    }

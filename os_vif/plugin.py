@@ -43,9 +43,9 @@ class PluginInfo(object):
 class PluginBase(object):
     """Base class for all VIF plugins."""
 
-    def __init__(self, **config):
+    def __init__(self, config):
         """
-        Sets up the plugin using supplied kwargs representing configuration
+        Sets up the plugin using vif.Config representing configuration
         options.
         """
         self.config = config

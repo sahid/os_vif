@@ -25,7 +25,7 @@ _EXT_MANAGER = None
 LOG = logging.getLogger('os_vif')
 
 
-def initialize(reset=False, **config):
+def initialize(reset=False, config=None):
     """
     Loads all os_vif plugins and initializes them with a dictionary of
     configuration options. These configuration options are passed as-is
@@ -38,34 +38,17 @@ def initialize(reset=False, **config):
     should check the documentation of individual plugins for a complete
     list of configuration options that the plugin understands or uses.
 
-    :param **config: Configuration option dictionary.
-
-        `use_ipv6`: Default: False. For plugins that configure IPv6 iptables
-                    rules or functionality, set this option to True if you want
-                    to support IPv6.
-        `disable_rootwrap`: Default: False. Set to True to force plugins to use
-                    sudoers files instead of any `oslo.rootwrap` functionality.
-        `use_rootwrap_daemon`: Default: False. Set to True to use the optional
-                    `oslo.rootwrap` daemon for better performance of root-run
-                    commands.
-        `rootwrap_config`: Default: /etc/nova/rootwrap.conf. Path to the
-                    rootwrap configuration file.
-        `iptables_top_regex`: Default: ''. Override top filters in iptables
-                    rules construction.
-        `iptables_bottom_regex`: Default: ''. Override bottom filters in
-                    iptables rules construction.
-        `iptables_drop_action`: Default: DROP. Override the name of the drop
-                    action in iptables rules.
-        `forward_bridge_interface`: Default: ['all'].
-        `network_device_mtu`: Default: 1500. Override the MTU of network
-                    devices created by a VIF plugin.
+    :param config: a vif.Config object.
     """
     global _EXT_MANAGER
     if reset or (_EXT_MANAGER is None):
+        os_vif.objects.register_all()
+        if not config:
+            # If no specifc config provided use default one.
+            config = os_vif.objects.vif.Config()
         _EXT_MANAGER = extension.ExtensionManager(namespace='os_vif',
                                                   invoke_on_load=True,
                                                   invoke_args=config)
-        os_vif.objects.register_all()
 
 
 def plug(vif, instance):
